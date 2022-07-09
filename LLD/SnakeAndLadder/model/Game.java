@@ -5,26 +5,25 @@ import java.util.*;
 import org.apache.commons.lang3.RandomUtils;
 
 public class Game {
-    private int snakesCount;
-    private int laddersCount;
-    private int playersCount;
-    private Queue<Player> players;
-    private List<Snake> snakes;
-    private List<Ladder> ladders;
-    private Board board;
-    private Dice dice;
-    private Set<String> startEndPositionSet;
+    private final int snakesCount;
+    private final int laddersCount;
+    private final Queue<Player> players;
+    private final List<Snake> snakes;
+    private final List<Ladder> ladders;
+    private final Board board;
+    private final Dice dice;
+    private final Set<String> startEndPositionSet;
 
-    public Game(int size, int snakesCount, int laddersCount, int playersCount) {
+    public Game(int size, int snakesCount, int laddersCount) {
         this.snakesCount = snakesCount;
         this.laddersCount = laddersCount;
-        this.playersCount = playersCount;
         board = new Board(size);
         dice = new Dice();
         snakes = new ArrayList<>();
         ladders = new ArrayList<>();
         players = new LinkedList<>();
         startEndPositionSet = new HashSet<>();
+        init();
     }
 
     private void init() {
@@ -47,7 +46,7 @@ public class Game {
             while (true) {
                 int start = RandomUtils.nextInt(board.getStart(), board.getEnd());
                 int end = RandomUtils.nextInt(board.getStart(), board.getEnd());
-                if (start <= end)
+                if (start >= end)
                     continue;
                 String startEndPair = String.valueOf(start) + end;
                 if (!startEndPositionSet.contains(startEndPair)) {
@@ -65,7 +64,7 @@ public class Game {
     }
 
     public void play() {
-        while (true) {
+        while (true){
             Player player = players.poll();
             System.out.println("it's player **" + player.getName() + "** turn'");
             int diceValue = dice.roll();
@@ -90,7 +89,7 @@ public class Game {
                     players.offer(player);
                 }
             }
-            if (players.size() < 2)
+            if(players.size()<2)
                 break;
         }
     }

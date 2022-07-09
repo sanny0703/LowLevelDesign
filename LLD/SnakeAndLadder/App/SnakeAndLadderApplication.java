@@ -16,7 +16,7 @@ public class SnakeAndLadderApplication {
         int laddersCount = scanner.nextInt();
         System.out.println("Enter the snakes count: ");
         int snakesCount = scanner.nextInt();
-        Game game = new Game(size, snakesCount, laddersCount, playersCount);
+        Game game = new Game(size, snakesCount, laddersCount);
         for (int i = 0; i < playersCount; i++) {
             System.out.println("Enter the player " + (i + 1) + " name: ");
             String name = scanner.next();
