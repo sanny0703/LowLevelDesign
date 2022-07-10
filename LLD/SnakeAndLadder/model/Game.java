@@ -64,48 +64,41 @@ public class Game {
     }
 
     public void play() {
-        while (true){
+        do {
             Player player = players.poll();
-            System.out.println("it's player **" + player.getName() + "** turn'");
+            System.out.println("@@@@@@@@@@@ it's player **" + player.getName() + "** turn @@@@@@@@@@");
             int diceValue = dice.roll();
-            State newState = getState(player.getPosition() + diceValue);
-            if (newState.getPosition() > board.getEnd()) {
-                System.out.println("Player  " + player.getName() + " remained in the " + player.getPosition());
+            System.out.println("it's  " + diceValue);
+            int position = getState(player.getPosition() + diceValue);
+            if (position > board.getEnd()) {
+                System.out.println("player " + player.getName() + "  will remain at the same position");
                 players.offer(player);
+            } else if (position == board.getEnd()) {
+                player.setWon(true);
+                player.setPosition(position);
+                System.out.println("===========   player  " + player.getName() + "  has won the game ==========");
             } else {
-                if (newState.getPosition() == board.getEnd()) {
-                    System.out.println("===== Player  " + player.getName() + " has won the game========");
-                    player.setWon(true);
-                    player.setPosition(newState.getPosition());
-                } else {
-                    if (newState.isBittenBySnake()) {
-                        System.out.println("--------Player " + player.getName() + " has bitten by a snake and went down to " + newState.getPosition() + "---------");
-                    } else if (newState.isClimbedLadder()) {
-                        System.out.println("+++++++++Player " + player.getName() + "  has climbed a ladder and reached up to " + newState.getPosition() + "+++++++++");
-                    } else {
-                        System.out.println("Player " + player.getName() + "  has reached " + newState.getPosition());
-                    }
-                    player.setPosition(newState.getPosition());
-                    players.offer(player);
-                }
+                player.setPosition(position);
+                players.offer(player);
+                System.out.println("player  " + player.getName() + "  has reached " + player.getPosition());
             }
-            if(players.size()<2)
-                break;
-        }
+        } while (players.size() >= 2);
     }
 
-    private State getState(int position) {
+    private int getState(int position) {
         for (Snake snake : snakes) {
             if (position == snake.getHead()) {
-                return new State(snake.getTail(), true, false);
+                System.out.println("Got bitten by a snake and reached down to  " + snake.getTail());
+                return snake.getTail();
             }
         }
         for (Ladder ladder : ladders) {
             if (position == ladder.getBottom()) {
-                return new State(ladder.getTop(), false, true);
+                System.out.println("Climbed a  ladder and reached up to  " + ladder.getTop());
+                return ladder.getTop();
             }
         }
-        return new State(position, false, false);
+        return position;
     }
 
 }
